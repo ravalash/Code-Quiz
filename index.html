@@ -19,7 +19,10 @@
         <div class="row">
             <div class="col-6" style="margin: auto;">
                 <div id="question-section">
-                    <h2 style="text-align: center;">Questions</h2>
+                    <h2 style="text-align: center;">Categories</h2>
+                </div>
+                <div id="instructions-section">
+                    <h2 style="text-align: center;">Please select an option</h2>
                 </div>
             </div>
         </div>
@@ -42,6 +45,9 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
     <script>
+        var selectionCategory = "";
+        var selectionNumber = "";
+        var x = 1;
         categories = {
             javaQuestions: {
                 category: "Java",
@@ -100,19 +106,36 @@
         for (i = 0; i < Object.keys(categories).length; i++) {
             var categoryName = Object.values(categories)[i].category;
             console.log(categoryName);
-            var categoryButton = document.createElement("buttton");
+            var categoryButton = document.createElement("button");
             categoryButton.setAttribute("data-category", categoryName);
             categoryButton.setAttribute("class", "btn btn-primary m-1");
             categoryButton.setAttribute("data-number", i);
-            categoryButton.setAttribute("style", "display: block");
+            categoryButton.setAttribute("style", "width: 100%");
             categoryButton.textContent = categoryName;
             document.getElementById("question-section").appendChild(categoryButton)
         }
         document.getElementById("question-section").addEventListener("click", function () {
             event.preventDefault();
-            console.log(event.target);
-
+            selectionCategory = event.target.getAttribute("data-category");
+            selectionNumber = event.target.getAttribute("data-number");
+            console.log(selectionCategory + " " + selectionNumber);
+            clearQuestionDiv();
         })
+
+        function clearQuestionDiv() {
+            while (x) {
+                if (document.getElementById("question-section").lastElementChild.nodeName == "BUTTON") {
+
+                    document.getElementById("question-section").removeChild(document.getElementById("question-section").lastElementChild);
+                }
+                else {
+                    return;
+                }
+
+            }
+
+        }
+
 
 
 
