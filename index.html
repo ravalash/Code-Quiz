@@ -15,7 +15,20 @@
 </head>
 
 <body>
-    <h1>Hello, world!</h1>
+    <main class="container">
+        <div class="row">
+            <div class="col-6" style="margin: auto;">
+                <div id="question-section">
+                    <h2 style="text-align: center;">Questions</h2>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </main>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -31,7 +44,7 @@
     <script>
         categories = {
             javaQuestions: {
-                category: "Java Questions",
+                category: "Java",
                 qSet1: {
                     question: "Is this a question?",
                     wrongAnswers: ["carrot", "potato", "donkey"],
@@ -44,7 +57,33 @@
                 }
             },
             disneyQuestions: {
-                category: "Disney Questions",
+                category: "Disney Characters",
+                qSet1: {
+                    question: "Is this a question?",
+                    wrongAnswers: ["carrot", "potato", "donkey"],
+                    rightAnswer: "yes"
+                },
+                qSet2: {
+                    question: "Is this a cat?",
+                    wrongAnswers: ["sticks", "stones", "rocks"],
+                    rightAnswer: "no"
+                }
+            },
+            musicQuestions: {
+                category: "Pop Music",
+                qSet1: {
+                    question: "Is this a question?",
+                    wrongAnswers: ["carrot", "potato", "donkey"],
+                    rightAnswer: "yes"
+                },
+                qSet2: {
+                    question: "Is this a cat?",
+                    wrongAnswers: ["sticks", "stones", "rocks"],
+                    rightAnswer: "no"
+                }
+            },
+            travelQuestions: {
+                category: "Travel Destinations",
                 qSet1: {
                     question: "Is this a question?",
                     wrongAnswers: ["carrot", "potato", "donkey"],
@@ -57,6 +96,23 @@
                 }
             }
         }
+        var categoryArray = Object.keys(categories);
+        for (i = 0; i < Object.keys(categories).length; i++) {
+            var categoryName = Object.values(categories)[i].category;
+            console.log(categoryName);
+            var categoryButton = document.createElement("buttton");
+            categoryButton.setAttribute("data-category", categoryName);
+            categoryButton.setAttribute("class", "btn btn-primary m-1");
+            categoryButton.setAttribute("data-number", i);
+            categoryButton.setAttribute("style", "display: block");
+            categoryButton.textContent = categoryName;
+            document.getElementById("question-section").appendChild(categoryButton)
+        }
+        document.getElementById("question-section").addEventListener("click", function () {
+            event.preventDefault();
+            console.log(event.target);
+
+        })
 
 
 
