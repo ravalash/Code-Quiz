@@ -118,23 +118,25 @@
         }
 
 
-
-        var categoryArray = Object.keys(categories);
-        for (i = 0; i < Object.keys(categories).length; i++) {
-            var categoryName = Object.values(categories)[i].category;
-            var categoryObject = Object.keys(categories)[i];
-            console.log(categoryName);
-            var categoryButton = document.createElement("button");
-            categoryButton.setAttribute("data-category", categoryName);
-            categoryButton.setAttribute("data-object", categoryObject);
-            categoryButton.setAttribute("class", "btn btn-primary m-1 category-btn");
-            categoryButton.setAttribute("data-number", i);
-            categoryButton.setAttribute("style", "width: 100%");
-            categoryButton.textContent = categoryName;
-            document.getElementById("question-section").appendChild(categoryButton);
+        function loadCategories() {
+            var categoryArray = Object.keys(categories);
+            for (i = 0; i < Object.keys(categories).length; i++) {
+                var categoryName = Object.values(categories)[i].category;
+                var categoryObject = Object.keys(categories)[i];
+                console.log(categoryName);
+                var categoryButton = document.createElement("button");
+                categoryButton.setAttribute("data-category", categoryName);
+                categoryButton.setAttribute("data-object", categoryObject);
+                categoryButton.setAttribute("class", "btn btn-primary m-1 category-btn");
+                categoryButton.setAttribute("data-number", i);
+                categoryButton.setAttribute("style", "width: 100%");
+                categoryButton.textContent = categoryName;
+                document.getElementById("question-section").appendChild(categoryButton);
+            }
         }
 
-        document.getElementById("question-section").addEventListener("click", function () {
+
+        function chooseCategory() {
             event.preventDefault();
             selectionCategory = event.target.getAttribute("data-object");
             selectionNumber = event.target.getAttribute("data-number");
@@ -145,7 +147,7 @@
             loadInstructions();
             // buildQuestionButtons();
 
-        })
+        }
 
         function loadQuizQuestions() {
             quizQuestionNumber = Object.entries(categories[selectionCategory]).length;
@@ -189,6 +191,7 @@
             instructions.textContent = "You will be presented with a series of questions on " + selectionName + ". Each incorrect answer will reduce the alloted time to complete the quiz. Questions are presented until they have all been answered or the clock has expired. Your final score is based on the time remaining on the clock at the end."
             instructions.setAttribute("class", "card mt-5");
             document.getElementById("question-section").appendChild(instructions);
+            document.getElementById("question-section").removeEventListener("click", chooseCategory);
             document.getElementById("question-section").setAttribute("id", "start-section");
             document.getElementById("instructions-section").firstElementChild.textContent = "Please select an option";
             var instructionsButton = document.createElement("button");
@@ -201,7 +204,7 @@
             instructionsButton.setAttribute("style", "width: 50%");
             instructionsButton.textContent = "Back";
             document.getElementById("instructions-section").appendChild(instructionsButton);
-
+            document.getElementById("instructions-section").addEventListener("click", chooseInstruction);
 
         }
 
@@ -222,7 +225,54 @@
 
         }
 
+        function clearInstructionsDiv() {
+            while (x) {
+                if (document.getElementById("instructions-section").lastElementChild.nodeName == "BUTTON") {
 
+                    document.getElementById("instructions-section").removeChild(document.getElementById("instructions-section").lastElementChild);
+                }
+                else {
+                    return;
+                }
+
+            }
+
+        }
+
+        function clearStartSection() {
+            while (x) {
+                if (document.getElementById("start-section").lastElementChild.nodeName == "P") {
+
+                    document.getElementById("start-section").removeChild(document.getElementById("start-section").lastElementChild);
+                }
+                else {
+                    return;
+                }
+
+            }
+
+        }
+
+        function chooseInstruction() {
+            console.log(event);
+            console.log(event.target);
+            console.log(event.target.textContent);
+            if (event.target.textContent == "Back") {
+                clearInstructionsDiv();
+                clearStartSection();
+                document.getElementById("start-section").firstElementChild.textContent = "Categories";
+                document.getElementById("instructions-section").firstElementChild.textContent = "Please select a category";
+                document.getElementById("start-section").setAttribute("id", "question-section");
+                document.getElementById("question-section").addEventListener("click", chooseCategory);
+                document.getElementById("instructions-section").removeEventListener("click", chooseInstruction)
+                loadCategories();
+
+            }
+
+        }
+
+        loadCategories();
+        document.getElementById("question-section").addEventListener("click", chooseCategory);
 
 
 
