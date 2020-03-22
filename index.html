@@ -51,7 +51,7 @@
         var selectionName = "";
         var x = 1;
         var quizQuestion = "";
-        var quizAnswers = {};
+        var quizAnswers = [null, null, null, null];
         var quizRightAnswer = "";
         var quizRandom = 0;
         var quizRandomNumbers = new Array;
@@ -116,8 +116,9 @@
                 }
             }
         }
+        Object.freeze(categories.javaQuestions);
 
-
+        // Runs through database and loads all question categories on screen
         function loadCategories() {
             var categoryArray = Object.keys(categories);
             for (i = 0; i < Object.keys(categories).length; i++) {
@@ -135,7 +136,7 @@
             }
         }
 
-
+        // Loads first set of quiz questions into memory from chosen category, clears category buttons, displays instructions
         function chooseCategory() {
             event.preventDefault();
             selectionCategory = event.target.getAttribute("data-object");
@@ -149,19 +150,27 @@
 
         }
 
+        // Loads number of questions in set and readies question from question set
         function loadQuizQuestions() {
+            // quizAnswers = clearArray(quizAnswers);
+            quizAnswers = [];
+            console.log(quizAnswers);
             quizQuestionNumber = Object.entries(categories[selectionCategory]).length;
             console.log(quizQuestionNumber);
             quizQuestion = categories[selectionCategory][questionSet].question;
             console.log(quizQuestion);
-            quizAnswers = categories[selectionCategory][questionSet].wrongAnswers;
+            console.log(categories[selectionCategory][questionSet].wrongAnswers);
+            for (i = 0; i < (categories[selectionCategory][questionSet].wrongAnswers).length; i++) {
+                quizAnswers[i] = (categories[selectionCategory][questionSet].wrongAnswers)[i]
+            }
             console.log(quizAnswers);
             quizRightAnswer = categories[selectionCategory][questionSet].rightAnswer;
             console.log(quizRightAnswer);
-            quizAnswers.push(quizRightAnswer);
+            quizAnswers[quizAnswers.length] = quizRightAnswer
             console.log(quizAnswers);
         }
 
+        // Randomizes array answers to build answer buttons for display
         function buildQuestionButtons() {
             for (i = 0; i < quizAnswers.length; i++) {
                 while (reroll === true) {
@@ -179,12 +188,13 @@
                 questionButton.textContent = quizAnswers[quizRandom];
                 quizRandomNumbers.push(quizRandom);
                 reroll = true;
-                document.getElementById("question-section").appendChild(questionButton);
+                document.getElementById("answer-section").appendChild(questionButton);
             }
 
 
         }
 
+        // Displays instructions on screen and presents start and back buttons. Sets ID for clickable sections, clears previous event handler
         function loadInstructions() {
             document.getElementById("question-section").firstElementChild.textContent = "Instructions";
             var instructions = document.createElement("p");
@@ -210,7 +220,7 @@
 
 
 
-
+        // Clears out question div for category buttons
         function clearQuestionDiv() {
             while (x) {
                 if (document.getElementById("question-section").lastElementChild.nodeName == "BUTTON") {
@@ -225,6 +235,7 @@
 
         }
 
+        // Clears buttons from instructions screen
         function clearInstructionsDiv() {
             while (x) {
                 if (document.getElementById("instructions-section").lastElementChild.nodeName == "BUTTON") {
@@ -239,6 +250,7 @@
 
         }
 
+        // Clears instruction paragraph on instructions screen
         function clearStartSection() {
             while (x) {
                 if (document.getElementById("start-section").lastElementChild.nodeName == "P") {
@@ -253,6 +265,7 @@
 
         }
 
+        // Handles clicking of start and back on instructions screen
         function chooseInstruction() {
             console.log(event);
             console.log(event.target);
@@ -266,9 +279,30 @@
                 document.getElementById("question-section").addEventListener("click", chooseCategory);
                 document.getElementById("instructions-section").removeEventListener("click", chooseInstruction)
                 loadCategories();
-
+            }
+            if (event.target.textContent == "Start") {
+                clearInstructionsDiv();
+                clearStartSection();
+                document.getElementById("start-section").firstElementChild.textContent = quizQuestion;
+                document.getElementById("instructions-section").firstElementChild.textContent = "Choose an Answer";
+                document.getElementById("start-section").setAttribute("id", "answer-section");
+                document.getElementById("answer-section").addEventListener("click", chooseAnswer);
+                document.getElementById("instructions-section").removeEventListener("click", chooseInstruction);
+                buildQuestionButtons();
             }
 
+        }
+
+        function clearArray(myArray) {
+            console.log(myArray);
+            for (i = 0; i < myArray.length; i++) {
+                myArray.pop();
+                console.log(myArray);
+            }
+            return myArray;
+        }
+        function chooseAnswer() {
+            return;
         }
 
         loadCategories();
