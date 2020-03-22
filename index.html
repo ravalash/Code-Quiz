@@ -52,6 +52,9 @@
         var quizQuestion = "";
         var quizAnswers = {};
         var quizRightAnswer = "";
+        var quizRandom = 0;
+        var quizRandomNumbers = new Array;
+        var reroll = true;
 
         categories = {
             javaQuestions: {
@@ -127,7 +130,7 @@
             categoryButton.setAttribute("data-number", i);
             categoryButton.setAttribute("style", "width: 100%");
             categoryButton.textContent = categoryName;
-            document.getElementById("question-section").appendChild(categoryButton)
+            document.getElementById("question-section").appendChild(categoryButton);
         }
 
         document.getElementById("question-section").addEventListener("click", function () {
@@ -135,8 +138,9 @@
             selectionCategory = event.target.getAttribute("data-object");
             selectionNumber = event.target.getAttribute("data-number");
             console.log(selectionCategory + " " + selectionNumber);
-            // clearQuestionDiv();
+            clearQuestionDiv();
             loadQuizQuestions();
+            buildQuestionButtons();
 
 
         })
@@ -155,16 +159,33 @@
         }
 
         function buildQuestionButtons() {
-            while (quizAnswers != {}) {
-                Math.floor(Math.random() * quizAnswers.length)
-                var categoryButton = document.createElement("button");
-                categoryButton.setAttribute("class", "btn btn-primary m-1 category-btn");
-                categoryButton.setAttribute("style", "width: 100%");
-                categoryButton.textContent = categoryName;
-
-
+            for (i = 0; i < quizAnswers.length; i++) {
+                console.log("test");
+                while (reroll === true) {
+                    quizRandom = Math.floor(Math.random() * quizAnswers.length);
+                    console.log("new roll " + quizRandom);
+                    reroll = false;
+                    for (x = -1; x < quizRandomNumbers.length; x++) {
+                        console.log("new x loop");
+                        if (quizRandomNumbers[x] == quizRandom) {
+                            console.log(quizRandomNumbers[x] + " " + quizRandom)
+                            console.log("number previously rolled")
+                            reroll = true;
+                        }
+                    }
+                }
+                var questionButton = document.createElement("button");
+                questionButton.setAttribute("class", "btn btn-primary m-1 question-btn");
+                questionButton.setAttribute("style", "width: 100%");
+                questionButton.textContent = quizAnswers[quizRandom];
+                quizRandomNumbers.push(quizRandom);
+                reroll = true;
+                document.getElementById("question-section").appendChild(questionButton);
             }
+
+
         }
+
 
 
 
