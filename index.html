@@ -18,11 +18,21 @@
     <main class="container">
         <div class="row">
             <div class="col-6" style="margin: auto;">
-                <div id="question-section" style="min-height: 30vh;text-align: center;">
-                    <h2>Categories</h2>
+                <div class="card bg-light" id="question-section" style="min-height: 30vh;text-align: center;">
+                    <h2 class="card-title">Categories</h2>
                 </div>
                 <div id="instructions-section" style="text-align: center;">
                     <h2>Please select a category</h2>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card text-center bg-light d-none" id="quiz-clock">
+                    <div class="card-body">
+                        <h5 class="card-title">Time Left</h5>
+                        <p class="card-text" id="timer-section"></p>
+                        <h5 class="card-text" id="answer-feedback"></h5>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -56,6 +66,14 @@
         var quizRandom = 0;
         var quizRandomNumbers = new Array;
         var reroll = true;
+        var quizCorrect = 0;
+        var quizTotal = 0;
+        var quizNumberRight = 0;
+        var quizNumberWrong = 0;
+        var quizSeconds = 0;
+        var quizTimer = 0;
+        var clearTimer = false;
+        var finalScore = 0;
 
         categories = {
             javaQuestions: {
@@ -143,7 +161,7 @@
             selectionNumber = event.target.getAttribute("data-number");
             selectionName = event.target.textContent;
             console.log(selectionCategory + " " + selectionNumber);
-            clearQuestionDiv();
+            clearQuestionDiv("question-section");
             loadQuizQuestions();
             loadInstructions();
             // buildQuestionButtons();
@@ -172,9 +190,13 @@
 
         // Randomizes array answers to build answer buttons for display
         function buildQuestionButtons() {
+            quizSeconds = (quizQuestionNumber - 1) * 6
+            console.log("build questions");
             for (i = 0; i < quizAnswers.length; i++) {
+                console.log(quizAnswers.length);
                 while (reroll === true) {
                     quizRandom = Math.floor(Math.random() * quizAnswers.length);
+                    console.log(quizRandom);
                     reroll = false;
                     for (x = -1; x < quizRandomNumbers.length; x++) {
                         if (quizRandomNumbers[x] == quizRandom) {
@@ -190,7 +212,7 @@
                 reroll = true;
                 document.getElementById("answer-section").appendChild(questionButton);
             }
-
+            quizRandomNumbers = [];
 
         }
 
@@ -221,11 +243,11 @@
 
 
         // Clears out question div for category buttons
-        function clearQuestionDiv() {
+        function clearQuestionDiv(divName) {
             while (x) {
-                if (document.getElementById("question-section").lastElementChild.nodeName == "BUTTON") {
+                if (document.getElementById(divName).lastElementChild.nodeName == "BUTTON") {
 
-                    document.getElementById("question-section").removeChild(document.getElementById("question-section").lastElementChild);
+                    document.getElementById(divName).removeChild(document.getElementById(divName).lastElementChild);
                 }
                 else {
                     return;
@@ -235,20 +257,29 @@
 
         }
 
-        // Clears buttons from instructions screen
-        function clearInstructionsDiv() {
-            while (x) {
-                if (document.getElementById("instructions-section").lastElementChild.nodeName == "BUTTON") {
-
-                    document.getElementById("instructions-section").removeChild(document.getElementById("instructions-section").lastElementChild);
-                }
-                else {
-                    return;
-                }
-
+        function toggleClock(clockSwitch) {
+            if (clockSwitch === "off") {
+                document.getElementById("quiz-clock").setAttribute("class", "card text-center bg-light d-none");
             }
-
+            else if (clockSwitch === "on") {
+                document.getElementById("quiz-clock").setAttribute("class", "card text-center bg-light")
+            }
         }
+
+        // Clears buttons from instructions screen - Condensed into previous function
+        // function clearInstructionsDiv() {
+        //     while (x) {
+        //         if (document.getElementById("instructions-section").lastElementChild.nodeName == "BUTTON") {
+
+        //             document.getElementById("instructions-section").removeChild(document.getElementById("instructions-section").lastElementChild);
+        //         }
+        //         else {
+        //             return;
+        //         }
+
+        //     }
+
+        // }
 
         // Clears instruction paragraph on instructions screen
         function clearStartSection() {
@@ -271,7 +302,7 @@
             console.log(event.target);
             console.log(event.target.textContent);
             if (event.target.textContent == "Back") {
-                clearInstructionsDiv();
+                clearQuestionDiv("instructions-section");
                 clearStartSection();
                 document.getElementById("start-section").firstElementChild.textContent = "Categories";
                 document.getElementById("instructions-section").firstElementChild.textContent = "Please select a category";
@@ -281,7 +312,7 @@
                 loadCategories();
             }
             if (event.target.textContent == "Start") {
-                clearInstructionsDiv();
+                clearQuestionDiv("instructions-section");
                 clearStartSection();
                 document.getElementById("start-section").firstElementChild.textContent = quizQuestion;
                 document.getElementById("instructions-section").firstElementChild.textContent = "Choose an Answer";
@@ -289,6 +320,9 @@
                 document.getElementById("answer-section").addEventListener("click", chooseAnswer);
                 document.getElementById("instructions-section").removeEventListener("click", chooseInstruction);
                 buildQuestionButtons();
+                quizTimer = quizSeconds;
+                toggleClock("on");
+                updateTimer();
             }
 
         }
@@ -301,8 +335,76 @@
             }
             return myArray;
         }
+
+        function loadResults() {
+            var results = document.createElement("p");
+            results.textContent = "Right Answers: " + quizNumberRight + " Wrong Answers: " + quizNumberWrong + " Final Score: " + finalScore;
+            results.setAttribute("class", "card-body mt-3");
+            results.setAttribute("style", "text-align: center");
+            document.getElementById("answer-section").appendChild(results);
+
+        }
+
+        // Handles clicking of answers and logging right or wrong answers
         function chooseAnswer() {
-            return;
+            quizTotal = quizTotal + 1
+            console.log(event);
+            console.log(event.target);
+            console.log(event.target.textContent);
+            if (event.target.textContent == quizRightAnswer) {
+                quizNumberRight = quizNumberRight + 1;
+                quizCorrect = 1;
+                document.getElementById("answer-feedback").textContent = "Correct!";
+                document.getElementById("answer-feedback").setAttribute("class", "card-text text-success");
+            }
+            else {
+                quizNumberWrong = quizNumberWrong + 1;
+                quizCorrect = 0;
+                quizTimer = quizTimer - 3;
+                document.getElementById("answer-feedback").textContent = "Wrong!";
+                document.getElementById("answer-feedback").setAttribute("class", "card-text text-danger");
+            }
+            console.log(quizCorrect);
+            clearQuestionDiv("answer-section");
+            if (quizTotal < quizQuestionNumber - 1) {
+                questionSet = "qSet" + (quizTotal + 1);
+                loadQuizQuestions();
+                buildQuestionButtons();
+            }
+            else {
+                clearTimer = true;
+                finalScore = quizTimer;
+                updateTimer;
+                loadResults();
+            }
+
+        }
+
+        function updateTimer() {
+
+
+            var myTimer = setInterval(function () {
+                if (clearTimer === true) {
+                    clearInterval(myTimer);
+                    return;
+                }
+
+                quizTimer--;
+                document.getElementById("timer-section").textContent = quizTimer;
+                if (quizTimer === 0) {
+                    finalScore = quizTimer;
+                    clearQuestionDiv("answer-section");
+                    clearInterval(myTimer);
+                    loadResults();
+                }
+
+
+
+
+
+
+            }, 1000);
+
         }
 
         loadCategories();
