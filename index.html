@@ -18,11 +18,11 @@
     <main class="container">
         <div class="row">
             <div class="col-6" style="margin: auto;">
-                <div id="question-section" style="min-height: 30vh;">
-                    <h2 style="text-align: center;">Categories</h2>
+                <div id="question-section" style="min-height: 30vh;text-align: center;">
+                    <h2>Categories</h2>
                 </div>
-                <div id="instructions-section">
-                    <h2 style="text-align: center;">Please select an option</h2>
+                <div id="instructions-section" style="text-align: center;">
+                    <h2>Please select a category</h2>
                 </div>
             </div>
         </div>
@@ -48,6 +48,7 @@
         var questionSet = "qSet1";
         var selectionCategory = "";
         var selectionNumber = "";
+        var selectionName = "";
         var x = 1;
         var quizQuestion = "";
         var quizAnswers = {};
@@ -137,11 +138,12 @@
             event.preventDefault();
             selectionCategory = event.target.getAttribute("data-object");
             selectionNumber = event.target.getAttribute("data-number");
+            selectionName = event.target.textContent;
             console.log(selectionCategory + " " + selectionNumber);
             clearQuestionDiv();
             loadQuizQuestions();
-            buildQuestionButtons();
-
+            loadInstructions();
+            // buildQuestionButtons();
 
         })
 
@@ -160,16 +162,11 @@
 
         function buildQuestionButtons() {
             for (i = 0; i < quizAnswers.length; i++) {
-                console.log("test");
                 while (reroll === true) {
                     quizRandom = Math.floor(Math.random() * quizAnswers.length);
-                    console.log("new roll " + quizRandom);
                     reroll = false;
                     for (x = -1; x < quizRandomNumbers.length; x++) {
-                        console.log("new x loop");
                         if (quizRandomNumbers[x] == quizRandom) {
-                            console.log(quizRandomNumbers[x] + " " + quizRandom)
-                            console.log("number previously rolled")
                             reroll = true;
                         }
                     }
@@ -182,6 +179,28 @@
                 reroll = true;
                 document.getElementById("question-section").appendChild(questionButton);
             }
+
+
+        }
+
+        function loadInstructions() {
+            document.getElementById("question-section").firstElementChild.textContent = "Instructions";
+            var instructions = document.createElement("p");
+            instructions.textContent = "You will be presented with a series of questions on " + selectionName + ". Each incorrect answer will reduce the alloted time to complete the quiz. Questions are presented until they have all been answered or the clock has expired. Your final score is based on the time remaining on the clock at the end."
+            instructions.setAttribute("class", "card mt-5");
+            document.getElementById("question-section").appendChild(instructions);
+            document.getElementById("question-section").setAttribute("id", "start-section");
+            document.getElementById("instructions-section").firstElementChild.textContent = "Please select an option";
+            var instructionsButton = document.createElement("button");
+            instructionsButton.setAttribute("class", "btn btn-success m-1 instructions-btn");
+            instructionsButton.setAttribute("style", "width: 50%");
+            instructionsButton.textContent = "Start";
+            document.getElementById("instructions-section").appendChild(instructionsButton);
+            var instructionsButton = document.createElement("button");
+            instructionsButton.setAttribute("class", "btn btn-danger m-1 instructions-btn");
+            instructionsButton.setAttribute("style", "width: 50%");
+            instructionsButton.textContent = "Back";
+            document.getElementById("instructions-section").appendChild(instructionsButton);
 
 
         }
