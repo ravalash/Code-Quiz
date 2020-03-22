@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Quiz Master 3000</title>
 </head>
 
 <body>
@@ -20,7 +20,16 @@
             <div class="col-6" style="margin: auto;">
                 <div class="card bg-light" id="question-section" style="min-height: 30vh;text-align: center;">
                     <h2 class="card-title">Categories</h2>
+                    <form class="d-none" id="score-section">
+                        <div class="form-group">
+                            <label for="highScoreInput">Enter Initials to Record Score</label>
+                            <input type="text" class="form-control text-center" id="highScoreInput" name="userInitials">
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="highScoreButton">Submit</button>
+                        <p id="user-input-response"></p>
+                    </form>
                 </div>
+
                 <div id="instructions-section" style="text-align: center;">
                     <h2>Please select a category</h2>
                 </div>
@@ -55,16 +64,17 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
     <script>
+
         var questionSet = "qSet1";
         var selectionCategory = "";
         var selectionNumber = "";
         var selectionName = "";
         var x = 1;
         var quizQuestion = "";
-        var quizAnswers = [null, null, null, null];
+        var quizAnswers = [];
         var quizRightAnswer = "";
         var quizRandom = 0;
-        var quizRandomNumbers = new Array;
+        var quizRandomNumbers = [];
         var reroll = true;
         var quizCorrect = 0;
         var quizTotal = 0;
@@ -136,6 +146,19 @@
         }
         Object.freeze(categories.javaQuestions);
 
+        document.getElementById("highScoreButton").addEventListener("click", function () {
+            event.preventDefault();
+
+            var userInitials = document.getElementById("highScoreInput").value;
+            console.log(userInitials);
+            document.getElementById("user-input-response").textContent = "Thanks " + userInitials + ". Your score is recorded";
+            var hsName = selectionName + "name";
+            var hsScore = selectionName + "score";
+            localStorage.setItem(hsName, userInitials);
+            localStorage.setItem(hsScore, finalScore);
+
+        })
+
         // Runs through database and loads all question categories on screen
         function loadCategories() {
             var categoryArray = Object.keys(categories);
@@ -157,10 +180,17 @@
         // Loads first set of quiz questions into memory from chosen category, clears category buttons, displays instructions
         function chooseCategory() {
             event.preventDefault();
+            // console.log(event.target.getAttribute("data-obect"));
+            // if (event.target.getAttribute("data-obect") == null) {
+            //     return;
+            // }
             selectionCategory = event.target.getAttribute("data-object");
             selectionNumber = event.target.getAttribute("data-number");
             selectionName = event.target.textContent;
-            console.log(selectionCategory + " " + selectionNumber);
+            if (selectionCategory == null) {
+                return;
+            }
+            console.log(selectionCategory + " " + selectionNumber + " " + selectionName);
             clearQuestionDiv("question-section");
             loadQuizQuestions();
             loadInstructions();
@@ -221,11 +251,26 @@
             document.getElementById("question-section").firstElementChild.textContent = "Instructions";
             var instructions = document.createElement("p");
             instructions.textContent = "You will be presented with a series of questions on " + selectionName + ". Each incorrect answer will reduce the alloted time to complete the quiz. Questions are presented until they have all been answered or the clock has expired. Your final score is based on the time remaining on the clock at the end."
-            instructions.setAttribute("class", "card mt-5");
+            instructions.setAttribute("class", "card mt-2");
             document.getElementById("question-section").appendChild(instructions);
             document.getElementById("question-section").removeEventListener("click", chooseCategory);
             document.getElementById("question-section").setAttribute("id", "start-section");
             document.getElementById("instructions-section").firstElementChild.textContent = "Please select an option";
+            var highScoreAlert = document.createElement("div");
+            highScoreAlert.setAttribute("class", "alert alert-dark mt-3");
+            highScoreAlert.setAttribute("role", "alert");
+            var hsName = selectionName + "name";
+            var hsScore = selectionName + "score";
+            var hsDisplayName = "None";
+            var hsDisplayScore = "";
+            if (localStorage.getItem(hsName) != null) {
+                hsDisplayName = localStorage.getItem(hsName);
+                hsDisplayScore = localStorage.getItem(hsScore);
+            }
+
+            highScoreAlert.textContent = "Current High Score: " + hsDisplayName + " " + hsDisplayScore;
+            document.getElementById("start-section").lastElementChild.appendChild(highScoreAlert);
+
             var instructionsButton = document.createElement("button");
             instructionsButton.setAttribute("class", "btn btn-success m-1 instructions-btn");
             instructionsButton.setAttribute("style", "width: 50%");
@@ -266,27 +311,20 @@
             }
         }
 
-        // Clears buttons from instructions screen - Condensed into previous function
-        // function clearInstructionsDiv() {
-        //     while (x) {
-        //         if (document.getElementById("instructions-section").lastElementChild.nodeName == "BUTTON") {
+        function toggleScore(scoreSwitch) {
+            if (scoreSwitch === "off") {
+                document.getElementById("score-section").setAttribute("class", "d-none");
+            }
+            else if (scoreSwitch === "on") {
+                document.getElementById("score-section").setAttribute("class", " ")
+            }
+        }
 
-        //             document.getElementById("instructions-section").removeChild(document.getElementById("instructions-section").lastElementChild);
-        //         }
-        //         else {
-        //             return;
-        //         }
-
-        //     }
-
-        // }
-
-        // Clears instruction paragraph on instructions screen
-        function clearStartSection() {
+        function clearStartSection(divName) {
             while (x) {
-                if (document.getElementById("start-section").lastElementChild.nodeName == "P") {
+                if (document.getElementById(divName).lastElementChild.nodeName == "P") {
 
-                    document.getElementById("start-section").removeChild(document.getElementById("start-section").lastElementChild);
+                    document.getElementById(divName).removeChild(document.getElementById(divName).lastElementChild);
                 }
                 else {
                     return;
@@ -303,7 +341,7 @@
             console.log(event.target.textContent);
             if (event.target.textContent == "Back") {
                 clearQuestionDiv("instructions-section");
-                clearStartSection();
+                clearStartSection("start-section");
                 document.getElementById("start-section").firstElementChild.textContent = "Categories";
                 document.getElementById("instructions-section").firstElementChild.textContent = "Please select a category";
                 document.getElementById("start-section").setAttribute("id", "question-section");
@@ -313,7 +351,7 @@
             }
             if (event.target.textContent == "Start") {
                 clearQuestionDiv("instructions-section");
-                clearStartSection();
+                clearStartSection("start-section");
                 document.getElementById("start-section").firstElementChild.textContent = quizQuestion;
                 document.getElementById("instructions-section").firstElementChild.textContent = "Choose an Answer";
                 document.getElementById("start-section").setAttribute("id", "answer-section");
@@ -342,14 +380,62 @@
             results.setAttribute("class", "card-body mt-3");
             results.setAttribute("style", "text-align: center");
             document.getElementById("answer-section").appendChild(results);
+            toggleScore("on");
+            document.getElementById("answer-section").firstElementChild.textContent = "Quiz Complete!";
+            document.getElementById("instructions-section").firstElementChild.textContent = "Choose an Option";
+            document.getElementById("answer-section").removeEventListener("click", chooseAnswer);
+            var instructionsButton = document.createElement("button");
+            instructionsButton.setAttribute("class", "btn btn-success m-1 instructions-btn");
+            instructionsButton.setAttribute("style", "width: 50%");
+            instructionsButton.textContent = "Exit to Menu";
+            document.getElementById("instructions-section").appendChild(instructionsButton);
+            document.getElementById("instructions-section").addEventListener("click", restartQuiz);
+        }
+
+        function restartQuiz() {
+            toggleClock("off");
+            toggleScore("off");
+            clearStartSection("answer-section");
+            clearQuestionDiv("instructions-section")
+            document.getElementById("answer-section").firstElementChild.textContent = "Categories";
+            document.getElementById("instructions-section").firstElementChild.textContent = "Please select a category";
+            document.getElementById("answer-section").setAttribute("id", "question-section");
+            document.getElementById("instructions-section").removeEventListener("click", restartQuiz)
+            loadCategories();
+            document.getElementById("question-section").addEventListener("click", chooseCategory);
+            selectionCategory = "";
+            selectionNumber = "";
+            selectionName = "";
+            x = 1;
+            quizQuestion = "";
+            quizAnswers = [];
+            quizRightAnswer = "";
+            quizRandom = 0;
+            quizRandomNumbers = [];
+            reroll = true;
+            quizCorrect = 0;
+            quizTotal = 0;
+            quizNumberRight = 0;
+            quizNumberWrong = 0;
+            quizSeconds = 0;
+            quizTimer = 0;
+            clearTimer = false;
+            finalScore = 0;
+            questionSet = "qSet1";
+
 
         }
 
         // Handles clicking of answers and logging right or wrong answers
         function chooseAnswer() {
+            if (event.target.nodeName != "BUTTON") {
+                return;
+            }
+
             quizTotal = quizTotal + 1
             console.log(event);
             console.log(event.target);
+            console.log(event.target.nodeName);
             console.log(event.target.textContent);
             if (event.target.textContent == quizRightAnswer) {
                 quizNumberRight = quizNumberRight + 1;
