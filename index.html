@@ -18,7 +18,7 @@
     <main class="container">
         <div class="row">
             <div class="col-6" style="margin: auto;">
-                <div id="question-section">
+                <div id="question-section" style="min-height: 30vh;">
                     <h2 style="text-align: center;">Categories</h2>
                 </div>
                 <div id="instructions-section">
@@ -45,9 +45,14 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
     <script>
+        var questionSet = "qSet1";
         var selectionCategory = "";
         var selectionNumber = "";
         var x = 1;
+        var quizQuestion = "";
+        var quizAnswers = {};
+        var quizRightAnswer = "";
+
         categories = {
             javaQuestions: {
                 category: "Java",
@@ -60,18 +65,23 @@
                     question: "Is this a cat?",
                     wrongAnswers: ["sticks", "stones", "rocks"],
                     rightAnswer: "no"
+                },
+                qSet3: {
+                    question: "Is this a dog?",
+                    wrongAnswers: ["poop", "face", "nose"],
+                    rightAnswer: "no"
                 }
             },
             disneyQuestions: {
                 category: "Disney Characters",
                 qSet1: {
-                    question: "Is this a question?",
-                    wrongAnswers: ["carrot", "potato", "donkey"],
+                    question: "Is this a mouse?",
+                    wrongAnswers: ["puppy", "kitten", "bat"],
                     rightAnswer: "yes"
                 },
                 qSet2: {
-                    question: "Is this a cat?",
-                    wrongAnswers: ["sticks", "stones", "rocks"],
+                    question: "Is this a bird?",
+                    wrongAnswers: ["heart", "sour", "baby"],
                     rightAnswer: "no"
                 }
             },
@@ -102,25 +112,61 @@
                 }
             }
         }
+
+
+
         var categoryArray = Object.keys(categories);
         for (i = 0; i < Object.keys(categories).length; i++) {
             var categoryName = Object.values(categories)[i].category;
+            var categoryObject = Object.keys(categories)[i];
             console.log(categoryName);
             var categoryButton = document.createElement("button");
             categoryButton.setAttribute("data-category", categoryName);
-            categoryButton.setAttribute("class", "btn btn-primary m-1");
+            categoryButton.setAttribute("data-object", categoryObject);
+            categoryButton.setAttribute("class", "btn btn-primary m-1 category-btn");
             categoryButton.setAttribute("data-number", i);
             categoryButton.setAttribute("style", "width: 100%");
             categoryButton.textContent = categoryName;
             document.getElementById("question-section").appendChild(categoryButton)
         }
+
         document.getElementById("question-section").addEventListener("click", function () {
             event.preventDefault();
-            selectionCategory = event.target.getAttribute("data-category");
+            selectionCategory = event.target.getAttribute("data-object");
             selectionNumber = event.target.getAttribute("data-number");
             console.log(selectionCategory + " " + selectionNumber);
-            clearQuestionDiv();
+            // clearQuestionDiv();
+            loadQuizQuestions();
+
+
         })
+
+        function loadQuizQuestions() {
+            quizQuestionNumber = Object.entries(categories[selectionCategory]).length;
+            console.log(quizQuestionNumber);
+            quizQuestion = categories[selectionCategory][questionSet].question;
+            console.log(quizQuestion);
+            quizAnswers = categories[selectionCategory][questionSet].wrongAnswers;
+            console.log(quizAnswers);
+            quizRightAnswer = categories[selectionCategory][questionSet].rightAnswer;
+            console.log(quizRightAnswer);
+            quizAnswers.push(quizRightAnswer);
+            console.log(quizAnswers);
+        }
+
+        function buildQuestionButtons() {
+            while (quizAnswers != {}) {
+                Math.floor(Math.random() * quizAnswers.length)
+                var categoryButton = document.createElement("button");
+                categoryButton.setAttribute("class", "btn btn-primary m-1 category-btn");
+                categoryButton.setAttribute("style", "width: 100%");
+                categoryButton.textContent = categoryName;
+
+
+            }
+        }
+
+
 
         function clearQuestionDiv() {
             while (x) {
