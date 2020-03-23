@@ -45,11 +45,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
     </main>
 
     <!-- Optional JavaScript -->
@@ -64,7 +59,6 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
     <script>
-
         var questionSet = "qSet1";
         var selectionCategory = "";
         var selectionNumber = "";
@@ -76,7 +70,6 @@
         var quizRandom = 0;
         var quizRandomNumbers = [];
         var reroll = true;
-        var quizCorrect = 0;
         var quizTotal = 0;
         var quizNumberRight = 0;
         var quizNumberWrong = 0;
@@ -85,77 +78,161 @@
         var clearTimer = false;
         var finalScore = 0;
 
+        //Data object to store quiz answers. Must include semantic category tittle, descriptive category name, and qsets with question, 3 wrong answers, 1 right answer. 
+        // Supports unlimited entries
         categories = {
             javaQuestions: {
                 category: "Java",
                 qSet1: {
-                    question: "Is this a question?",
-                    wrongAnswers: ["carrot", "potato", "donkey"],
-                    rightAnswer: "yes"
+                    question: "In Java, what is a collection of statements that are grouped together to perform an operation?",
+                    wrongAnswers: ["Loop", "Array", "Variable"],
+                    rightAnswer: "Method"
                 },
                 qSet2: {
-                    question: "Is this a cat?",
-                    wrongAnswers: ["sticks", "stones", "rocks"],
-                    rightAnswer: "no"
+                    question: "Which type of variable has only two possible values, true or false?",
+                    wrongAnswers: ["String", "Integer", "Function"],
+                    rightAnswer: "Boolean"
                 },
                 qSet3: {
-                    question: "Is this a dog?",
-                    wrongAnswers: ["poop", "face", "nose"],
-                    rightAnswer: "no"
+                    question: "What is a value passed as an input to a function?",
+                    wrongAnswers: ["Number", "Statement", "Operator"],
+                    rightAnswer: "Argument"
+                },
+                qSet4: {
+                    question: "What is a named location for storing a value?",
+                    wrongAnswers: ["Definition", "Pseudo", "Code"],
+                    rightAnswer: "Variable"
+                },
+                qSet5: {
+                    question: "What is an ordered collection of data stored in a single variable?",
+                    wrongAnswers: ["Class", "Integer", "Quotient"],
+                    rightAnswer: "Array"
+                },
+                qSet6: {
+                    question: "What is loaded in the browser and represents the document as a node tree?",
+                    wrongAnswers: ["CSS", "HTML", "Jquery"],
+                    rightAnswer: "DOM"
+                },
+                qSet7: {
+                    question: "What is an optional condition to an if statement if no other conditions are true",
+                    wrongAnswers: ["While", "For", "Function"],
+                    rightAnswer: "Else"
+                },
+                qSet8: {
+                    question: "What is the context in which values are visible and can be referenced?",
+                    wrongAnswers: ["Identifier", "Hash", "Object"],
+                    rightAnswer: "Scope"
+                },
+                qSet9: {
+                    question: "What statement ends method execution and passes a value to the function caller?",
+                    wrongAnswers: ["Exit", "Break", "Close"],
+                    rightAnswer: "Return"
+                },
+                qSet10: {
+                    question: "What is a symbol used for arithmetic or boolean expressions?",
+                    wrongAnswers: ["Package", "String", "Switch"],
+                    rightAnswer: "Operator"
                 }
             },
             disneyQuestions: {
                 category: "Disney Characters",
                 qSet1: {
-                    question: "Is this a mouse?",
-                    wrongAnswers: ["puppy", "kitten", "bat"],
-                    rightAnswer: "yes"
+                    question: "Which Lion King character was voiced by Jeremy Irons",
+                    wrongAnswers: ["Simba", "Mufasa", "Nala"],
+                    rightAnswer: "Scar"
                 },
                 qSet2: {
-                    question: "Is this a bird?",
-                    wrongAnswers: ["heart", "sour", "baby"],
-                    rightAnswer: "no"
+                    question: "Which yellow and blue fish was Ariel's best friend?",
+                    wrongAnswers: ["Ursula", "Dory", "Nemo"],
+                    rightAnswer: "Flounder"
+                },
+                qSet3: {
+                    question: "Which bird was the pet and sidekick of Jafar in Aladdin?",
+                    wrongAnswers: ["Apu", "Rajah", "Genie"],
+                    rightAnswer: "Iago"
+                },
+                qSet4: {
+                    question: "According to the song named for him, which character in Beauty and the Beast was 'What a Guy'?",
+                    wrongAnswers: ["Maurice", "Cogsworth", "Chip"],
+                    rightAnswer: "Gaston"
+                },
+                qSet5: {
+                    question: "Who is the first and original Disney princess?",
+                    wrongAnswers: ["Cinderella", "Mulan", "Aurora"],
+                    rightAnswer: "Snow White"
                 }
+
             },
             musicQuestions: {
                 category: "Pop Music",
                 qSet1: {
-                    question: "Is this a question?",
-                    wrongAnswers: ["carrot", "potato", "donkey"],
-                    rightAnswer: "yes"
+                    question: "What was Madonna’s first UK top ten single?",
+                    wrongAnswers: ["Lucky Star", "Like a Virgin", "Material Girl"],
+                    rightAnswer: "Holiday"
                 },
                 qSet2: {
-                    question: "Is this a cat?",
-                    wrongAnswers: ["sticks", "stones", "rocks"],
-                    rightAnswer: "no"
+                    question: "What is the better known stage name of Robyn Fenty?",
+                    wrongAnswers: ["Lady Gaga", "Lizzo", "Sia"],
+                    rightAnswer: "Rhianna"
+                },
+                qSet3: {
+                    question: "Who is the musical alter ego of actor Donald Glover?",
+                    wrongAnswers: ["Change the Rapper", "Lil Flip", "Machine Gun Kelly"],
+                    rightAnswer: "Childish Gambino"
+                },
+                qSet4: {
+                    question: "Jimmy Page is an English musician who formed which rock band in 1968?",
+                    wrongAnswers: ["Aerosmith", "The Rolling Stones", "Black Sabbath"],
+                    rightAnswer: "Led Zeppelin"
+                },
+                qSet5: {
+                    question: "In which American city was Elvis discovered dead in 1977?",
+                    wrongAnswers: ["Austin", "Tallahassee", "Atlanta"],
+                    rightAnswer: "Memphis"
                 }
             },
             travelQuestions: {
                 category: "Travel Destinations",
                 qSet1: {
-                    question: "Is this a question?",
-                    wrongAnswers: ["carrot", "potato", "donkey"],
-                    rightAnswer: "yes"
+                    question: "What city is often called the 'City of Light'?",
+                    wrongAnswers: ["Athens", "London", "Berlin"],
+                    rightAnswer: "Paris"
                 },
                 qSet2: {
-                    question: "Is this a cat?",
-                    wrongAnswers: ["sticks", "stones", "rocks"],
-                    rightAnswer: "no"
+                    question: "In what city is the Colosseum located?",
+                    wrongAnswers: ["Venice", "Florence", "Verona"],
+                    rightAnswer: "Rome"
+                },
+                qSet3: {
+                    question: "What destination is home to the largest dormant volcano?",
+                    wrongAnswers: ["Bora Bora", "Tahiti", "Nassau"],
+                    rightAnswer: "Maui"
+                },
+                qSet4: {
+                    question: "What city is home to the tallest building in the world?",
+                    wrongAnswers: ["Shanghai", "Mecca", "Seoul"],
+                    rightAnswer: "Dubai"
+                },
+                qSet5: {
+                    question: "What was the world's most visisted city in 2019?",
+                    wrongAnswers: ["New York City", "Tokyo", "Rio De Janeiro"],
+                    rightAnswer: "Bangkok"
                 }
             }
         }
-        Object.freeze(categories.javaQuestions);
 
+        //Handles submission of high scores. 
         document.getElementById("highScoreButton").addEventListener("click", function () {
             event.preventDefault();
-
             var userInitials = document.getElementById("highScoreInput").value;
-            console.log(userInitials);
             document.getElementById("user-input-response").textContent = "Thanks " + userInitials + ". Your score is recorded";
+            //Create identifier from category name and save to local storage
             var hsName = selectionName + "name";
             var hsScore = selectionName + "score";
-            localStorage.setItem(hsName, userInitials);
-            localStorage.setItem(hsScore, finalScore);
+            if (parseInt(localStorage.getItem(hsScore)) < finalScore || localStorage.getItem(hsScore) == null) {
+                localStorage.setItem(hsName, userInitials);
+                localStorage.setItem(hsScore, finalScore);
+            }
 
         })
 
@@ -165,7 +242,6 @@
             for (i = 0; i < Object.keys(categories).length; i++) {
                 var categoryName = Object.values(categories)[i].category;
                 var categoryObject = Object.keys(categories)[i];
-                console.log(categoryName);
                 var categoryButton = document.createElement("button");
                 categoryButton.setAttribute("data-category", categoryName);
                 categoryButton.setAttribute("data-object", categoryObject);
@@ -180,17 +256,12 @@
         // Loads first set of quiz questions into memory from chosen category, clears category buttons, displays instructions
         function chooseCategory() {
             event.preventDefault();
-            // console.log(event.target.getAttribute("data-obect"));
-            // if (event.target.getAttribute("data-obect") == null) {
-            //     return;
-            // }
             selectionCategory = event.target.getAttribute("data-object");
             selectionNumber = event.target.getAttribute("data-number");
             selectionName = event.target.textContent;
             if (selectionCategory == null) {
                 return;
             }
-            console.log(selectionCategory + " " + selectionNumber + " " + selectionName);
             clearQuestionDiv("question-section");
             loadQuizQuestions();
             loadInstructions();
@@ -200,33 +271,22 @@
 
         // Loads number of questions in set and readies question from question set
         function loadQuizQuestions() {
-            // quizAnswers = clearArray(quizAnswers);
             quizAnswers = [];
-            console.log(quizAnswers);
             quizQuestionNumber = Object.entries(categories[selectionCategory]).length;
-            console.log(quizQuestionNumber);
             quizQuestion = categories[selectionCategory][questionSet].question;
-            console.log(quizQuestion);
-            console.log(categories[selectionCategory][questionSet].wrongAnswers);
             for (i = 0; i < (categories[selectionCategory][questionSet].wrongAnswers).length; i++) {
                 quizAnswers[i] = (categories[selectionCategory][questionSet].wrongAnswers)[i]
             }
-            console.log(quizAnswers);
             quizRightAnswer = categories[selectionCategory][questionSet].rightAnswer;
-            console.log(quizRightAnswer);
             quizAnswers[quizAnswers.length] = quizRightAnswer
-            console.log(quizAnswers);
         }
 
         // Randomizes array answers to build answer buttons for display
         function buildQuestionButtons() {
             quizSeconds = (quizQuestionNumber - 1) * 6
-            console.log("build questions");
             for (i = 0; i < quizAnswers.length; i++) {
-                console.log(quizAnswers.length);
                 while (reroll === true) {
                     quizRandom = Math.floor(Math.random() * quizAnswers.length);
-                    console.log(quizRandom);
                     reroll = false;
                     for (x = -1; x < quizRandomNumbers.length; x++) {
                         if (quizRandomNumbers[x] == quizRandom) {
@@ -267,10 +327,8 @@
                 hsDisplayName = localStorage.getItem(hsName);
                 hsDisplayScore = localStorage.getItem(hsScore);
             }
-
             highScoreAlert.textContent = "Current High Score: " + hsDisplayName + " " + hsDisplayScore;
             document.getElementById("start-section").lastElementChild.appendChild(highScoreAlert);
-
             var instructionsButton = document.createElement("button");
             instructionsButton.setAttribute("class", "btn btn-success m-1 instructions-btn");
             instructionsButton.setAttribute("style", "width: 50%");
@@ -282,63 +340,10 @@
             instructionsButton.textContent = "Back";
             document.getElementById("instructions-section").appendChild(instructionsButton);
             document.getElementById("instructions-section").addEventListener("click", chooseInstruction);
-
-        }
-
-
-
-        // Clears out question div for category buttons
-        function clearQuestionDiv(divName) {
-            while (x) {
-                if (document.getElementById(divName).lastElementChild.nodeName == "BUTTON") {
-
-                    document.getElementById(divName).removeChild(document.getElementById(divName).lastElementChild);
-                }
-                else {
-                    return;
-                }
-
-            }
-
-        }
-
-        function toggleClock(clockSwitch) {
-            if (clockSwitch === "off") {
-                document.getElementById("quiz-clock").setAttribute("class", "card text-center bg-light d-none");
-            }
-            else if (clockSwitch === "on") {
-                document.getElementById("quiz-clock").setAttribute("class", "card text-center bg-light")
-            }
-        }
-
-        function toggleScore(scoreSwitch) {
-            if (scoreSwitch === "off") {
-                document.getElementById("score-section").setAttribute("class", "d-none");
-            }
-            else if (scoreSwitch === "on") {
-                document.getElementById("score-section").setAttribute("class", " ")
-            }
-        }
-
-        function clearStartSection(divName) {
-            while (x) {
-                if (document.getElementById(divName).lastElementChild.nodeName == "P") {
-
-                    document.getElementById(divName).removeChild(document.getElementById(divName).lastElementChild);
-                }
-                else {
-                    return;
-                }
-
-            }
-
         }
 
         // Handles clicking of start and back on instructions screen
         function chooseInstruction() {
-            console.log(event);
-            console.log(event.target);
-            console.log(event.target.textContent);
             if (event.target.textContent == "Back") {
                 clearQuestionDiv("instructions-section");
                 clearStartSection("start-section");
@@ -365,15 +370,40 @@
 
         }
 
-        function clearArray(myArray) {
-            console.log(myArray);
-            for (i = 0; i < myArray.length; i++) {
-                myArray.pop();
-                console.log(myArray);
+        // Handles clicking of answers and logging right or wrong answers
+        function chooseAnswer() {
+            if (event.target.nodeName != "BUTTON") {
+                return;
             }
-            return myArray;
+
+            quizTotal = quizTotal + 1
+            if (event.target.textContent == quizRightAnswer) {
+                quizNumberRight = quizNumberRight + 1;
+                document.getElementById("answer-feedback").textContent = "Correct!";
+                document.getElementById("answer-feedback").setAttribute("class", "card-text text-success");
+            }
+            else {
+                quizNumberWrong = quizNumberWrong + 1;
+                quizTimer = quizTimer - 3;
+                document.getElementById("answer-feedback").textContent = "Wrong!";
+                document.getElementById("answer-feedback").setAttribute("class", "card-text text-danger");
+            }
+            clearQuestionDiv("answer-section");
+            if (quizTotal < quizQuestionNumber - 1) {
+                questionSet = "qSet" + (quizTotal + 1);
+                loadQuizQuestions();
+                buildQuestionButtons();
+                document.getElementById("answer-section").firstElementChild.textContent = quizQuestion;
+            }
+            else {
+                clearTimer = true;
+                finalScore = quizTimer;
+                updateTimer;
+                loadResults();
+            }
         }
 
+        //Handles loading of results page and clearing out answer section
         function loadResults() {
             var results = document.createElement("p");
             results.textContent = "Right Answers: " + quizNumberRight + " Wrong Answers: " + quizNumberWrong + " Final Score: " + finalScore;
@@ -392,6 +422,7 @@
             document.getElementById("instructions-section").addEventListener("click", restartQuiz);
         }
 
+        //Handles restarting quiz loop once completed. Resets all variables
         function restartQuiz() {
             toggleClock("off");
             toggleScore("off");
@@ -413,7 +444,6 @@
             quizRandom = 0;
             quizRandomNumbers = [];
             reroll = true;
-            quizCorrect = 0;
             quizTotal = 0;
             quizNumberRight = 0;
             quizNumberWrong = 0;
@@ -422,59 +452,15 @@
             clearTimer = false;
             finalScore = 0;
             questionSet = "qSet1";
-
-
         }
 
-        // Handles clicking of answers and logging right or wrong answers
-        function chooseAnswer() {
-            if (event.target.nodeName != "BUTTON") {
-                return;
-            }
-
-            quizTotal = quizTotal + 1
-            console.log(event);
-            console.log(event.target);
-            console.log(event.target.nodeName);
-            console.log(event.target.textContent);
-            if (event.target.textContent == quizRightAnswer) {
-                quizNumberRight = quizNumberRight + 1;
-                quizCorrect = 1;
-                document.getElementById("answer-feedback").textContent = "Correct!";
-                document.getElementById("answer-feedback").setAttribute("class", "card-text text-success");
-            }
-            else {
-                quizNumberWrong = quizNumberWrong + 1;
-                quizCorrect = 0;
-                quizTimer = quizTimer - 3;
-                document.getElementById("answer-feedback").textContent = "Wrong!";
-                document.getElementById("answer-feedback").setAttribute("class", "card-text text-danger");
-            }
-            console.log(quizCorrect);
-            clearQuestionDiv("answer-section");
-            if (quizTotal < quizQuestionNumber - 1) {
-                questionSet = "qSet" + (quizTotal + 1);
-                loadQuizQuestions();
-                buildQuestionButtons();
-            }
-            else {
-                clearTimer = true;
-                finalScore = quizTimer;
-                updateTimer;
-                loadResults();
-            }
-
-        }
-
+        //Hanndles decreasing clock during quiz
         function updateTimer() {
-
-
             var myTimer = setInterval(function () {
                 if (clearTimer === true) {
                     clearInterval(myTimer);
                     return;
                 }
-
                 quizTimer--;
                 document.getElementById("timer-section").textContent = quizTimer;
                 if (quizTimer === 0) {
@@ -483,21 +469,56 @@
                     clearInterval(myTimer);
                     loadResults();
                 }
-
-
-
-
-
-
             }, 1000);
+        }
 
+        // Clears elements of all appended buttons. Accepts containing element id as argument
+        function clearQuestionDiv(divName) {
+            while (x) {
+                if (document.getElementById(divName).lastElementChild.nodeName == "BUTTON") {
+
+                    document.getElementById(divName).removeChild(document.getElementById(divName).lastElementChild);
+                }
+                else {
+                    return;
+                }
+            }
+        }
+
+        //Clears elements of all appended paragraphs. Accepts containing element id as argument
+        function clearStartSection(divName) {
+            while (x) {
+                if (document.getElementById(divName).lastElementChild.nodeName == "P") {
+                    document.getElementById(divName).removeChild(document.getElementById(divName).lastElementChild);
+                }
+                else {
+                    return;
+                }
+            }
+        }
+
+        // Toggles display of clock timer on and off
+        function toggleClock(clockSwitch) {
+            if (clockSwitch === "off") {
+                document.getElementById("quiz-clock").setAttribute("class", "card text-center bg-light d-none");
+            }
+            else if (clockSwitch === "on") {
+                document.getElementById("quiz-clock").setAttribute("class", "card text-center bg-light")
+            }
+        }
+
+        // Toggles dosplay of high score form on or off
+        function toggleScore(scoreSwitch) {
+            if (scoreSwitch === "off") {
+                document.getElementById("score-section").setAttribute("class", "d-none");
+            }
+            else if (scoreSwitch === "on") {
+                document.getElementById("score-section").setAttribute("class", " ")
+            }
         }
 
         loadCategories();
         document.getElementById("question-section").addEventListener("click", chooseCategory);
-
-
-
     </script>
 </body>
 
