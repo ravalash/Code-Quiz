@@ -10,7 +10,7 @@ This homework file will deliver a quiz game that is cutomizable to deliver new c
 This project is written using Java script and the Bootstrap CDN for layout and mobile responsiveness. Bootstrap Java libraries are included but not ulilized.
 
 # Screenshots
-![instructions](assets/instructions.JPG "Instructions Screen")
+![instructions](Assets/instructions.JPG "Instructions Screen")
 
 
 
