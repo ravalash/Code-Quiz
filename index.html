@@ -366,6 +366,7 @@
                 quizTimer = quizSeconds;
                 toggleClock("on");
                 updateTimer();
+                document.getElementById("timer-section").textContent = quizSeconds;
             }
 
         }
@@ -398,6 +399,9 @@
             else {
                 clearTimer = true;
                 finalScore = quizTimer;
+                if (finalScore <= 0) {
+                    finalScore = 0;
+                }
                 updateTimer;
                 loadResults();
             }
@@ -405,6 +409,7 @@
 
         //Handles loading of results page and clearing out answer section
         function loadResults() {
+            document.getElementById("timer-section").textContent = finalScore;
             var results = document.createElement("p");
             results.textContent = "Right Answers: " + quizNumberRight + " Wrong Answers: " + quizNumberWrong + " Final Score: " + finalScore;
             results.setAttribute("class", "card-body mt-3");
@@ -463,8 +468,8 @@
                 }
                 quizTimer--;
                 document.getElementById("timer-section").textContent = quizTimer;
-                if (quizTimer === 0) {
-                    finalScore = quizTimer;
+                if (quizTimer <= 0) {
+                    finalScore = 0;
                     clearQuestionDiv("answer-section");
                     clearInterval(myTimer);
                     loadResults();
