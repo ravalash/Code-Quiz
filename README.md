@@ -11,7 +11,8 @@ This project is written using Java script and the Bootstrap CDN for layout and m
 
 # Screenshots
 ![instructions](Assets/instructions.JPG "Instructions Screen")
-
+![FullScreen](Assets/fullscreen.JPG "Full Page Screen")
+![MobileLayout](Assets/mobilelayout.JPG "Mobile Layout Screen")
 
 
 # Features
