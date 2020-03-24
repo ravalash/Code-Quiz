@@ -11,56 +11,58 @@ This project is written using Java script and the Bootstrap CDN for layout and m
 
 # Screenshots
 
+Instructions Screen
 
+
+![instructions](Assets/instructions.JPG "Instructions Screen")
+
+Full Screen View
+
+
+![FullScreen](Assets/fullscreen.JPG "Full Page Screen")
+
+Mobile Layout View
+
+
+![MobileLayout](Assets/mobilelayout.JPG "Mobile Layout Screen")
 
 
 # Features
-Character limit prompt will not only reject numbers outside of the accepted range but will also reject string input and round decimals down.
+Answers are randomized on each play through to avoid repetition.
 
-Character set is built based on user selection to ensure that results match desired outcome.
+DOM is dynamically rebuilt to allow quick refresh without loading a new page.
 
-After the password is generated, it is checked to make sure it contains at least one of each desired character set. This allows a truly random selection while also ensuring the password matches user specficiations.
+Categories and questions are compltely customizable with little skill required.
 
 # Code Example
-This while loop rejects inputs that don't meet the minimum standards until valid selection is made
+This is an example of the object containing quiz question data. New categories or question sets can be added to expand the quiz.
 
-    while(uPassword != true && lPassword != true && nPassword != true && sPassword != true) {
-        var uPassword = confirm ("Would you like to include upper case characters?");
-        var lPassword = confirm ("Would you like to include lower case characters?");
-        var nPassword = confirm ("Would you like to include numerical characters?");
-        var sPassword = confirm ("Would you like to include special characters?");
-        if (uPassword != true && lPassword != true && nPassword != true && sPassword != true) {
-        alert("Your password must contain at least ONE character set selection");
-        }
-    }
+categories = {
+            javaQuestions: {
+                category: "Java",
+                qSet1: {
+                    question: "In Java, what is a collection of statements that are grouped together to perform an operation?",
+                    wrongAnswers: ["Loop", "Array", "Variable"],
+                    rightAnswer: "Method"
+                },
+                qSet2: {
+                    question: "Which type of variable has only two possible values, true or false?",
+                    wrongAnswers: ["String", "Integer", "Function"],
+                    rightAnswer: "Boolean"
+                }
 
 
-  This section is responsible for checking each character in the generated password to verify whether it was found in the separate character array.
+This section is an example of one that handles switching the display of specific elements on or off
 
-    for (i=0;i<numPassword;i++) {
-        // Loops once through each character in character array
-        for(n=0;n<uChars.length;n++) {
-            if (tempPassword[i] == uChars[n]) {
-            var uFound = true;
+        function toggleClock(clockSwitch) {
+            if (clockSwitch === "off") {
+                document.getElementById("quiz-clock").setAttribute("class", "card text-center bg-light d-none");
             }
-        }
-        for(n=0;n<lChars.length;n++) {
-            if (tempPassword[i] == lChars[n]) {
-            var lFound = true;
+            else if (clockSwitch === "on") {
+                document.getElementById("quiz-clock").setAttribute("class", "card text-center bg-light")
             }
-        }
-        for(n=0;n<nChars.length;n++) {
-            if (tempPassword[i] == nChars[n]) {
-            var nFound = true;
-            }
-        }
-        for(n=0;n<sChars.length;n++) {
-            if (tempPassword[i] == sChars[n]) {
-            var sFound = true;
-            }
-        }
         }
 
 # How to Use
-Click "Generate Password" to begin the password generation process. Follow the prompts to make selections. Click "cancel" on the first prompt to exit the loop.
+Choose a category to view high scores if they exist and begin the quix. Alternatively, back button may be selected on instructions screen to return to category selection. Each wrong answer during the quiz will penalize 3 seconds with an allotment of 6 seconds per question given at the start. Initials can be entered at the end and will display on next run if they are the highest.
 
